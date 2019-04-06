@@ -1,0 +1,114 @@
+
+
+#mainBoard{
+    border:2px solid #000;
+    border-collapse: collapse;
+    top: 50%;
+    position: absolute;
+    left: 50%;     
+    width:300px;
+    height:300px;
+    transform: translate(-50%, -50%);
+    background: #fff;
+}
+.wrapper {
+    width: 1000px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    background:white;
+    
+}
+
+
+.active{
+    background: rgb(236, 235, 235);
+}
+
+.playerPanel{
+    width: 50%;
+    float: left;
+    height: 600px;
+}
+
+.player1Name{
+    font-size: 40px;
+    margin-top:10%;
+    margin-left: 20%;
+}
+
+.player2Name{
+    font-size: 40px;
+    margin-top:10%;
+    margin-left: 55%;
+}
+
+.gameSquare{
+    border:2px solid #000;
+    border-collapse: collapse;
+    background-color:green;
+}
+
+.scoreBox{  
+    margin-top: 10%;
+    margin-left: 30%; 
+    width: 100px;
+    height: 100px;
+    color: rgb(21, 24, 27);
+    text-align: center;
+    font-size:30px;
+}
+
+#scorePlayer1{
+    margin-left:-80%;
+}
+
+#scorePlayer2{
+    margin-left:180%;
+}
+
+.statsWrapper{
+    width: 100px;
+    height:80px; 
+    border:2px;
+    background-color: rgb(65, 109, 35);
+    text-align: center;
+    color: rgb(7, 7, 7);
+    float: left;     
+}
+
+.player1AverageStats{
+    margin-top: 10%;    
+    margin-left: 0%;
+}
+.player1TurnsStats{
+    margin-top: 10%;    
+    margin-left: 20%;    
+}
+
+.player2AverageStats{
+    margin-top: 10%;
+    margin-left: 40%; 
+}
+
+.player2TurnsStats{
+    margin-top: 10%;    
+    margin-left:20%; 
+}
+.averagePlayingTimeLabel{
+    margin-left: 5%;
+    font-size: 18px;
+}
+
+#averagePlayingTimePlayer1{
+    font-size: 20px;
+    margin-top: 10%;
+}
+
+
+
