@@ -6,7 +6,7 @@
     top: 50%;
     position: absolute;
     left: 50%;     
-    width:300px;
+    width:350px;
     height:300px;
     transform: translate(-50%, -50%);
     background: #fff;
@@ -36,19 +36,21 @@
     height: 600px;
 }
 
-.player1Name{
+.playerName{
     font-size: 40px;
     margin-top:10%;
+   
+}
+.player1Name{
     margin-left: 20%;
 }
-
 .player2Name{
-    font-size: 40px;
-    margin-top:10%;
     margin-left: 55%;
 }
 
 .gameSquare{
+    width: 40px;
+    height: 40px;
     border:2px solid #000;
     border-collapse: collapse;
     background-color:green;
@@ -110,5 +112,32 @@
     margin-top: 10%;
 }
 
+.active>.playerName::after {
+    height: 15px;
+    width: 15px;
+    background-color: rgb(184, 53, 53);
+    border-radius: 50%;
+    display: inline-block;
+    content: "";
+  }
 
+.gameCurcle{
+    height: 20px;
+    width: 20px;
+    margin-left: 23%;
+    margin-top:50%;
+    border-radius: 50%;
+    position: relative;
+    display: block;
+    content: "";
+    text-align:center;
+}
+.CurclePlayer1{
+    background-color: #000;
+}
+
+
+.CurclePlayer2{
+    background-color: #fff;
+}
 
