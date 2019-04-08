@@ -18,6 +18,7 @@ var boardSize = 8;
 var board = new Board(boardSize);
 var currentPlayer = player1;
 
+
 startGame();
 
 function startGame(){
@@ -81,16 +82,36 @@ function PossibleMove(cell){
 
 
 function Player(playerNumber) {
-    this.panel = document.querySelector(".playerPanel" + playerNumber);
-    this.score = document.querySelector("#scorePlayer" + playerNumber).textContent;
-    var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
-    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
-    var playerElement = document.querySelector(".playerPanel" + playerNumber);
-    this.riskAmount = playerElement.querySelector(".playerRiskStats").textContent;
-    this.numberOfTurns = 0;
     this.NO = playerNumber;
+    this.panel = document.querySelector(".playerPanel" + this.NO);
+    this.score = document.querySelector("#scorePlayer" + this.NO).textContent;
+    var playerAverageStatsEl = document.querySelector(".player"+this.NO+"AverageStats");
+    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
+    var playerRiskElement = this.panel.querySelector(".playerRiskStats");
+    this.riskAmount = playerRiskElement.querySelector(".statsContent");
+
+    this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
+    this.updateRiskAmout = function() {
+        var newRiskAmount = this.riskAmount.innerHTML;
+        //console.log(newRiskAmount);
+        var res = 0;
+        var cell;
+        for(i=0; i<board.size*board.size; i++)
+        {
+            cell = document.getElementById(i);
+            if(cell.querySelector(".circlePlayer" + this.NO)!== null){
+                res++;
+            }
+        }
+        if(res < 10) // need 3
+        {
+            newRiskAmount++;
+            this.riskAmount.innerHTML = newRiskAmount;         
+        }
+        
+    }
 
     this.setStartTurn = function() {
         this.timeStart = new Date().getTime();
@@ -296,16 +317,6 @@ function switchPlayer(){
 
 function updatePlayerStats()
 {
-    updateAvgTurnTime();
-}
-
-function updateAvgTurnTime()
-{  
     currentPlayer.getAvgTimeTurn();
-    /*
-    var activePlayer = document.querySelector(".active");
-    var avg = activePlayer.querySelector(".player" + currentPlayer.NO + "AverageStats");
-    var content = avg.querySelector(".statsContent");
-    */
-
-}   
+    currentPlayer.updateRiskAmout();
+}
