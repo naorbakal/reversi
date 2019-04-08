@@ -18,14 +18,13 @@ var boardSize = 8;
 var board = new Board(boardSize);
 var currentPlayer = player1;
 
-
-console.log(player1);
-console.log(player2);
-currentPossibleMoves = findPossibleMove();
+startGame();
 
 function startGame(){
-    
+    currentPossibleMoves = findPossibleMove();
+    currentPlayer.setStartTurn();
 }
+    
 
 
 function findPossibleMove()
@@ -36,7 +35,6 @@ function findPossibleMove()
     for (var i=0; i<board.size; i++){
         for(var j=0; j<board.size; j++){
             cell = document.getElementById(counterID);
-            //console.log(cell);
             counterID++;
             if(!isCellOccupied(cell)){ 
                 if(PossibleMove(cell)){
@@ -86,19 +84,38 @@ function Player(playerNumber) {
     this.panel = document.querySelector(".playerPanel" + playerNumber);
     this.score = document.querySelector("#scorePlayer" + playerNumber).textContent;
     var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
-    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent").textContent;
+    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
     var playerElement = document.querySelector(".playerPanel" + playerNumber);
     this.riskAmount = playerElement.querySelector(".playerRiskStats").textContent;
     this.numberOfTurns = 0;
     this.NO = playerNumber;
+    this.turnTimeArray = new Array();
+    this.timeStart;
+
+    this.setStartTurn = function() {
+        this.timeStart = new Date().getTime();
+    }
+
+    this.setEndTurn = function() {
+        var turnTimeSec = (new Date().getTime() - this.timeStart) / 1000;
+        this.turnTimeArray.push(turnTimeSec);
+    }
+
+    this.getAvgTimeTurn = function() {
+        var sum = 0;
+        var res;
+        for(var i = 0; i < this.turnTimeArray.length; i++) {
+            sum += this.turnTimeArray[i];
+        }
+        res = (sum / this.turnTimeArray.length).toFixed(2);
+        this.averagePlayTime.innerHTML = res;
+    }
 }
 
 function handleMouseOverCellEvent() {
-    //console.log(currentPossibleMoves);
     var id = (event.currentTarget).getAttribute("id");
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
     {
-        //console.log(id);
         (event.target).style.backgroundColor = "red";
     }
 }
@@ -107,22 +124,23 @@ function handleMouseOutCellEvent() {
     var id = (event.currentTarget).getAttribute("id");
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
     {
-        //console.log(id);
         (event.target).style.backgroundColor = "green";
     }
+
 }
 
 function handleClickCellEvent() {
     var id = (event.currentTarget).getAttribute("id");
     var p =  (event.currentTarget).firstElementChild;
+
     if(currentPossibleMoves.includes(id))
     {
+        currentPlayer.setEndTurn();
         p.classList.add("circlePlayer" + currentPlayer.NO);
+        updatePlayerStats();
         switchPlayer();
         currentPossibleMoves = findPossibleMove();
     }
-    //currentPlayer.numberOfTurns++;
-
 }
 
 function createMainBoard(size) { 
@@ -165,6 +183,7 @@ function Board(size){
 }
 
 function switchPlayer(){
+    currentPlayer.numberOfTurns++;
     if(currentPlayer.NO === 1){
         currentPlayer = player2;
     }
@@ -173,5 +192,21 @@ function switchPlayer(){
     }
     player1.panel.classList.toggle("active");
     player2.panel.classList.toggle("active");
+    currentPlayer.setStartTurn();
 }
 
+function updatePlayerStats()
+{
+    updateAvgTurnTime();
+}
+
+function updateAvgTurnTime()
+{  
+    currentPlayer.getAvgTimeTurn();
+    /*
+    var activePlayer = document.querySelector(".active");
+    var avg = activePlayer.querySelector(".player" + currentPlayer.NO + "AverageStats");
+    var content = avg.querySelector(".statsContent");
+    */
+
+}   
