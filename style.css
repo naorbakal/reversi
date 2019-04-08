@@ -129,13 +129,16 @@
     display: block;
     content: "";
     text-align:center;
+    visibility: hidden;
 }
 .circlePlayer1{
     background-color: #000;
+    visibility: visible;
 }
 
 
 .circlePlayer2{
     background-color: #fff;
+    visibility: visible;
 }
 

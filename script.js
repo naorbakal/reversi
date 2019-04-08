@@ -52,7 +52,7 @@ function isCellOccupied(cell){
     if(cell !== null){
         if(cell.querySelector(".circlePlayer1")!== null || cell.querySelector(".circlePlayer2")!== null){
         //console.log(cell.querySelector(".circlePlayer1")!= null || cell.querySelector(".circlePlayer2")!= null);
-        console.log(cell);
+        //console.log(cell);
         return true;
         }
         return false;
@@ -80,17 +80,17 @@ function PossibleMove(cell){
 }
 
 
-function Player(playerNumber){
+function Player(playerNumber) {
     this.score = document.querySelector("#scorePlayer" + playerNumber).textContent;
     var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent").textContent;
     var playerElement = document.querySelector(".playerPanel" + playerNumber);
     this.riskAmount = playerElement.querySelector(".playerRiskStats").textContent;
     this.numberOfTurns = 0;
+    this.NO = playerNumber;
 }
 
-function handleMouseOverCellEvent()
-{
+function handleMouseOverCellEvent() {
     //console.log(currentPossibleMoves);
     var id = (event.currentTarget).getAttribute("id");
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
@@ -100,8 +100,7 @@ function handleMouseOverCellEvent()
     }
 }
 
-function handleMouseOutCellEvent()
-{
+function handleMouseOutCellEvent() {
     var id = (event.currentTarget).getAttribute("id");
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
     {
@@ -110,9 +109,16 @@ function handleMouseOutCellEvent()
     }
 }
 
+function handleClickCellEvent() {
+    var id = (event.currentTarget).getAttribute("id");
+    var p =  (event.currentTarget).firstElementChild;
+    if(currentPossibleMoves.includes(id))
+    {
+        p.classList.add("circlePlayer" + currentPlayer.NO);
+    }
+}
 
-function createMainBoard(size) {
-    
+function createMainBoard(size) { 
     var table = "";
     var counterID = 0;
     for(var i=0; i<size; i++){
@@ -121,7 +127,7 @@ function createMainBoard(size) {
 
         for (var j=0; j<size; j++){
 
-            table += "<td id="+ counterID + " onmouseover=handleMouseOverCellEvent() onmouseout=handleMouseOutCellEvent() class = gameSquare >" 
+            table += "<td id="+ counterID + " onmouseover=handleMouseOverCellEvent() onmouseout=handleMouseOutCellEvent() onclick=handleClickCellEvent() class = gameSquare >" 
             counterID++;
             if((i === size/2 || i === (size/2) - 1) && (j === size/2 || j === (size/2) - 1)){
                 if((i === size/2 && j === (size/2) - 1 ) ||(i === size/2 -1 && j === (size/2))){
