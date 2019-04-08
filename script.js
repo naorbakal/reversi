@@ -132,11 +132,18 @@ function handleMouseOutCellEvent() {
 function handleClickCellEvent() {
     var id = (event.currentTarget).getAttribute("id");
     var p =  (event.currentTarget).firstElementChild;
+    var cellsToFlip;
 
     if(currentPossibleMoves.includes(id))
     {
         currentPlayer.setEndTurn();
         p.classList.add("circlePlayer" + currentPlayer.NO);
+        currentPlayer.numberOfTurns++;
+        cellsToFlip = checkClosingMove(event.currentTarget);
+        console.log(cellsToFlip);
+        if(cellsToFlip != null){
+
+        }
         updatePlayerStats();
         switchPlayer();
         currentPossibleMoves = findPossibleMove();
@@ -152,7 +159,7 @@ function createMainBoard(size) {
 
         for (var j=0; j<size; j++){
 
-            table += "<td id="+ counterID + " onmouseover=handleMouseOverCellEvent() onmouseout=handleMouseOutCellEvent() onclick=handleClickCellEvent() class = gameSquare >" 
+            table += "<td id="+ counterID +" data-rows="+i+" data-cols="+j+" onmouseover=handleMouseOverCellEvent() onmouseout=handleMouseOutCellEvent() onclick=handleClickCellEvent() class = gameSquare >" 
             counterID++;
             if((i === size/2 || i === (size/2) - 1) && (j === size/2 || j === (size/2) - 1)){
                 if((i === size/2 && j === (size/2) - 1 ) ||(i === size/2 -1 && j === (size/2))){
@@ -176,10 +183,102 @@ function createMainBoard(size) {
 
 
 function Board(size){
+    
     createMainBoard(size);
-
     this.board = document.querySelector("#mainBoard");
     this.size = size;
+    this.updateBoard = (cell)=>{
+
+        checkClosingUp(this.board,cell,direction);
+        checkClosingDown();        
+    }
+       
+}
+
+function checkClosingMove(cell){
+    
+    var newCellId;
+    var currentPoint = {
+        row:cell.dataset.rows,
+        col:cell.dataset.cols
+    }
+    var cellToCheck;
+    var sawOpponenetCell = false;
+    var commitCells;
+    var cellsToUpdate = new Array();
+    var tempCells = new Array();
+    for(var i=0;i<8;i++)
+    {
+        for (var j =0; j<board.size ;j++)
+        {
+            getNextCellToCheck(i,currentPoint);
+            newCellId = calculateIdFromRowsAndCols(currentPoint);
+            cellToCheck = document.getElementById(newCellId);
+            if(cellToCheck == null){
+                break;
+            }
+
+            if(isCellOccupied(cellToCheck))
+            {
+                if(!sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) == null)
+                {
+                    sawOpponenetCell = true;
+                    tempCells.push(cellToCheck.getAttribute("id"));
+                }
+                else if(sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) == null)
+                {
+                    tempCells.push(cellToCheck.getAttribute("id"));
+                }
+                else if(sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) != null){
+                    commitCells=true;
+                }
+            }
+            if(commitCells === true){
+                cellsToUpdate.push(...tempCells);
+            }      
+        }
+        tempCells = new Array();
+    }
+    return (cellsToUpdate.length !== 0 ? cellsToUpdate:null);
+}
+
+function calculateIdFromRowsAndCols(point){
+    var row = point.row;
+    var col = point.col;
+
+    return (board.size*row)+col;
+}
+
+function getNextCellToCheck(flag,lastCall){
+
+    if(flag === 0) {    //checking up
+        lastCall.row--;
+    }
+   else  if(flag === 1){ //checking upLeft
+        lastCall.row--;
+        lastCall.col--;
+    }
+   else  if(flag ===2){ //checking upRight
+        lastCall.row--;
+        lastCall.col++;
+    }
+   else if(flag === 3){ //checking down
+        lastCall.row++;
+    }
+   else  if(flag === 4){ //checking downLeft
+        lastCall.row++;
+        lastCall.col--;
+    }
+   else if(flag === 5){ //checking upRight
+        lastCall.row++;
+        lastCall.col++;
+    }
+   else if(flag === 6){ //checking left
+        lastCall.col--;
+    }
+    else { //checking right
+        lastCall.col++;
+    }
 }
 
 function switchPlayer(){
