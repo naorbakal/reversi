@@ -18,11 +18,13 @@ var boardSize = 8;
 var board = new Board(boardSize);
 var currentPlayer = player1;
 
+
+console.log(player1);
+console.log(player2);
 currentPossibleMoves = findPossibleMove();
 
-function startGame()
-{
-
+function startGame(){
+    
 }
 
 
@@ -81,6 +83,7 @@ function PossibleMove(cell){
 
 
 function Player(playerNumber) {
+    this.panel = document.querySelector(".playerPanel" + playerNumber);
     this.score = document.querySelector("#scorePlayer" + playerNumber).textContent;
     var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent").textContent;
@@ -115,7 +118,11 @@ function handleClickCellEvent() {
     if(currentPossibleMoves.includes(id))
     {
         p.classList.add("circlePlayer" + currentPlayer.NO);
+        switchPlayer();
+        currentPossibleMoves = findPossibleMove();
     }
+    //currentPlayer.numberOfTurns++;
+
 }
 
 function createMainBoard(size) { 
@@ -156,3 +163,15 @@ function Board(size){
     this.board = document.querySelector("#mainBoard");
     this.size = size;
 }
+
+function switchPlayer(){
+    if(currentPlayer.NO === 1){
+        currentPlayer = player2;
+    }
+    else {
+        currentPlayer = player1;
+    }
+    player1.panel.classList.toggle("active");
+    player2.panel.classList.toggle("active");
+}
+
