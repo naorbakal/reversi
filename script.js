@@ -18,6 +18,7 @@ var boardSize = 8;
 var board = new Board(boardSize);
 var currentPlayer = player1;
 
+
 startGame();
 
 function startGame(){
@@ -82,15 +83,33 @@ function PossibleMove(cell){
 
 function Player(playerNumber) {
     this.panel = document.querySelector(".playerPanel" + playerNumber);
-    this.score = document.querySelector("#scorePlayer" + playerNumber).textContent;
+    console.log(this.panel);
+    this.score = 2;
+    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber)
     var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
-    var playerElement = document.querySelector(".playerPanel" + playerNumber);
-    this.riskAmount = playerElement.querySelector(".playerRiskStats").textContent;
+    this.riskAmountElement = this.panel.querySelector(".playerRiskStats").querySelector(".statsContent");
+    console.log(this.riskAmountElement);
+    this.riskAmount = 0;
     this.numberOfTurns = 0;
     this.NO = playerNumber;
     this.turnTimeArray = new Array();
     this.timeStart;
+    this.addScore = (numberToAdd)=>{
+        this.score += numberToAdd;
+        this.scoreElement.textContent = this.score;
+    }
+
+    this.decreaseScore = (numberToDecrease)=>{
+        this.score -= numberToDecrease;
+        this.scoreElement.textContent = this.score;
+        if(this.score <= 2){
+            this.riskAmount++;
+            console.log("player num"+this.NO);
+            this.riskAmountElement.querySelector(".statsContent2").textContent = this.riskAmount;       
+        }
+    }
+    
 
     this.setStartTurn = function() {
         this.timeStart = new Date().getTime();
@@ -110,6 +129,8 @@ function Player(playerNumber) {
         res = (sum / this.turnTimeArray.length).toFixed(2);
         this.averagePlayTime.innerHTML = res;
     }
+
+    this.scoreElement.textContent = this.score
 }
 
 function handleMouseOverCellEvent() {
@@ -141,13 +162,53 @@ function handleClickCellEvent() {
         currentPlayer.numberOfTurns++;
         cellsToFlip = checkClosingMove(event.currentTarget);
         
-        if(cellsToFlip != null){
-            board.updateBoard(cellsToFlip);
+        if(cellsToFlip.length !== 0){
+            board.updateBoard(cellsToFlip);  
+            //console.log(cellsToFlip);
+           // checkOpponentClosing(cellsToFlip);
         }
+        updateScore(cellsToFlip.length);
         updatePlayerStats();
-        switchPlayer();
+        switchPlayerFull();
         currentPossibleMoves = findPossibleMove();
     }
+}
+
+function updateScore(number){
+    currentPlayer.addScore(number + 1);
+    switchPlayerLight();
+    currentPlayer.decreaseScore(number);
+    switchPlayerLight(); 
+}
+
+function checkOpponentClosing(cellsToCheck){
+
+    var basePoint;
+    var currentPoint = new Object();
+    var currentCell; 
+
+
+    switchPlayerLight();
+    for(var i=0; i<cellsToCheck.length ;i++){
+        currentCell = document.getElementById(cellsToCheck[i]);
+        var basePoint ={row: parseInt(currentCell.dataset.rows),
+            col:parseInt(currentCell.dataset.cols)};
+
+        for(j=0;j<8;j++){
+            Object.assign(currentPoint,basePoint);    
+            getNextCellToCheck(i,currentPoint);
+            currentCell = document.getElementById(calculateIdFromRowsAndCols(currentPoint));
+            if(isCellOccupied(currentCell)){
+                cellsToFlip = checkClosingMove(currentCell);
+                console.log(cellsToFlip +"check");
+                if(cellsToFlip.length !== 0){
+                    board.updateBoard(cellsToFlip);
+                    updateScore(cellsToFlip.length);
+                }
+            }
+        }             
+    }
+    switchPlayerLight();
 }
 
 function createMainBoard(size) { 
@@ -253,7 +314,7 @@ function checkClosingMove(cell){
         }
         tempCells = new Array();
     }
-    return (cellsToUpdate.length !== 0 ? cellsToUpdate:null);
+    return (cellsToUpdate.length !== 0 ? cellsToUpdate: new Array());
 }
 
 function calculateIdFromRowsAndCols(point){
@@ -298,7 +359,15 @@ function getNextCellToCheck(flag,lastCall){
     }
 }
 
-function switchPlayer(){
+function switchPlayerLight(){
+    if(currentPlayer.NO === 1){
+        currentPlayer = player2;
+    }
+    else {
+        currentPlayer = player1;
+    }
+}
+function switchPlayerFull(){
     currentPlayer.numberOfTurns++;
     if(currentPlayer.NO === 1){
         currentPlayer = player2;
