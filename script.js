@@ -82,15 +82,14 @@ function PossibleMove(cell){
 
 
 function Player(playerNumber) {
-
     this.NO = playerNumber;
     this.panel = document.querySelector(".playerPanel" + this.NO);
-    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber)
-    this.score = scoreElement.textContent;
+    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber);
+    this.score = parseInt(this.scoreElement.textContent);
     var playerAverageStatsEl = document.querySelector(".player"+this.NO+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
     this.riskAmountElement = this.panel.querySelector(".playerRiskStats");
-    this.riskAmount = playerRiskElement.querySelector(".statsContent");
+    this.riskAmount =this.riskAmountElement.querySelector(".statsContent");
     this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
@@ -145,7 +144,6 @@ function Player(playerNumber) {
         this.averagePlayTime.innerHTML = res;
     }
 
-    this.scoreElement.textContent = this.score
 }
 
 function handleMouseOverCellEvent() {
