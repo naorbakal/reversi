@@ -121,9 +121,9 @@ function handleClickCellEvent() {
         p.classList.add("circlePlayer" + currentPlayer.NO);
         currentPlayer.numberOfTurns++;
         cellsToFlip = checkClosingMove(event.currentTarget);
-        console.log(cellsToFlip);
+        
         if(cellsToFlip != null){
-
+            board.updateBoard(cellsToFlip);
         }
         
         switchPlayer();
@@ -168,28 +168,37 @@ function Board(size){
     createMainBoard(size);
     this.board = document.querySelector("#mainBoard");
     this.size = size;
-    this.updateBoard = (cell)=>{
-
-        checkClosingUp(this.board,cell,direction);
-        checkClosingDown();        
+    this.updateBoard = (ToolsToUpdate)=>{
+       
+        var currentTool;
+        for (var i=0;i<ToolsToUpdate.length ;i++)
+        {
+           currentTool = document.getElementById(ToolsToUpdate[i]).firstElementChild;
+           currentTool.classList.toggle("circlePlayer1");
+           currentTool.classList.toggle("circlePlayer2");
+        }
     }
+    
        
 }
 
 function checkClosingMove(cell){
     
-    var newCellId;
-    var currentPoint = {
-        row:cell.dataset.rows,
-        col:cell.dataset.cols
-    }
+    var basePoint ={row: parseInt(cell.dataset.rows),
+        col:parseInt(cell.dataset.cols)}
+    var currentPoint = new Object;
+    var newCellId;   
     var cellToCheck;
     var sawOpponenetCell = false;
     var commitCells;
     var cellsToUpdate = new Array();
     var tempCells = new Array();
+
     for(var i=0;i<8;i++)
-    {
+    {   
+         Object.assign(currentPoint,basePoint);
+        commitCells=false;
+
         for (var j =0; j<board.size ;j++)
         {
             getNextCellToCheck(i,currentPoint);
@@ -198,7 +207,7 @@ function checkClosingMove(cell){
             if(cellToCheck == null){
                 break;
             }
-
+            console.log("" + currentPoint.row + currentPoint.col + " "+i +" "+newCellId);
             if(isCellOccupied(cellToCheck))
             {
                 if(!sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) == null)
@@ -213,10 +222,15 @@ function checkClosingMove(cell){
                 else if(sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) != null){
                     commitCells=true;
                 }
+                if(commitCells === true){
+                    cellsToUpdate.push(...tempCells);
+                    break;
+                } 
             }
-            if(commitCells === true){
-                cellsToUpdate.push(...tempCells);
-            }      
+            else{
+                break;
+            }
+           
         }
         tempCells = new Array();
     }
@@ -226,8 +240,11 @@ function checkClosingMove(cell){
 function calculateIdFromRowsAndCols(point){
     var row = point.row;
     var col = point.col;
-
-    return (board.size*row)+col;
+    if(row >= board.size || row < 0 || col >= board.size || col < 0){
+        return null;
+    }
+    var result =(board.size*row)+ col;
+    return result;
 }
 
 function getNextCellToCheck(flag,lastCall){
