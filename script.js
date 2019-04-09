@@ -82,18 +82,31 @@ function PossibleMove(cell){
 
 
 function Player(playerNumber) {
+
     this.NO = playerNumber;
     this.panel = document.querySelector(".playerPanel" + this.NO);
-    this.score = document.querySelector("#scorePlayer" + this.NO).textContent;
+    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber)
+    this.score = scoreElement.textContent;
     var playerAverageStatsEl = document.querySelector(".player"+this.NO+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
-    var playerRiskElement = this.panel.querySelector(".playerRiskStats");
+    this.riskAmountElement = this.panel.querySelector(".playerRiskStats");
     this.riskAmount = playerRiskElement.querySelector(".statsContent");
-
     this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
-    this.updateRiskAmout = function() {
+
+    this.addScore = (numberToAdd)=>{
+        this.score += numberToAdd;
+        this.scoreElement.textContent = this.score;
+    }
+
+    this.decreaseScore = (numberToDecrease)=>{
+        this.score -= numberToDecrease;
+        this.scoreElement.textContent = this.score;
+        this.updateRiskAmount();
+    }
+    
+    this.updateRiskAmount = function() {
         var newRiskAmount = this.riskAmount.innerHTML;
         //console.log(newRiskAmount);
         var res = 0;
@@ -131,6 +144,8 @@ function Player(playerNumber) {
         res = (sum / this.turnTimeArray.length).toFixed(2);
         this.averagePlayTime.innerHTML = res;
     }
+
+    this.scoreElement.textContent = this.score
 }
 
 function handleMouseOverCellEvent() {
@@ -161,14 +176,54 @@ function handleClickCellEvent() {
         p.classList.add("circlePlayer" + currentPlayer.NO);
         currentPlayer.numberOfTurns++;
         cellsToFlip = checkClosingMove(event.currentTarget);
-        console.log(cellsToFlip);
-        if(cellsToFlip != null){
-
+        
+        if(cellsToFlip.length !== 0){
+            board.updateBoard(cellsToFlip);  
+            //console.log(cellsToFlip);
+           // checkOpponentClosing(cellsToFlip);
         }
+        updateScore(cellsToFlip.length);
         updatePlayerStats();
-        switchPlayer();
+        switchPlayerFull();
         currentPossibleMoves = findPossibleMove();
     }
+}
+
+function updateScore(number){
+    currentPlayer.addScore(number + 1);
+    switchPlayerLight();
+    currentPlayer.decreaseScore(number);
+    switchPlayerLight(); 
+}
+
+function checkOpponentClosing(cellsToCheck){
+
+    var basePoint;
+    var currentPoint = new Object();
+    var currentCell; 
+
+
+    switchPlayerLight();
+    for(var i=0; i<cellsToCheck.length ;i++){
+        currentCell = document.getElementById(cellsToCheck[i]);
+        var basePoint ={row: parseInt(currentCell.dataset.rows),
+            col:parseInt(currentCell.dataset.cols)};
+
+        for(j=0;j<8;j++){
+            Object.assign(currentPoint,basePoint);    
+            getNextCellToCheck(i,currentPoint);
+            currentCell = document.getElementById(calculateIdFromRowsAndCols(currentPoint));
+            if(isCellOccupied(currentCell)){
+                cellsToFlip = checkClosingMove(currentCell);
+                console.log(cellsToFlip +"check");
+                if(cellsToFlip.length !== 0){
+                    board.updateBoard(cellsToFlip);
+                    updateScore(cellsToFlip.length);
+                }
+            }
+        }             
+    }
+    switchPlayerLight();
 }
 
 function createMainBoard(size) { 
@@ -208,28 +263,37 @@ function Board(size){
     createMainBoard(size);
     this.board = document.querySelector("#mainBoard");
     this.size = size;
-    this.updateBoard = (cell)=>{
-
-        checkClosingUp(this.board,cell,direction);
-        checkClosingDown();        
+    this.updateBoard = (ToolsToUpdate)=>{
+       
+        var currentTool;
+        for (var i=0;i<ToolsToUpdate.length ;i++)
+        {
+           currentTool = document.getElementById(ToolsToUpdate[i]).firstElementChild;
+           currentTool.classList.toggle("circlePlayer1");
+           currentTool.classList.toggle("circlePlayer2");
+        }
     }
+    
        
 }
 
 function checkClosingMove(cell){
     
-    var newCellId;
-    var currentPoint = {
-        row:cell.dataset.rows,
-        col:cell.dataset.cols
-    }
+    var basePoint ={row: parseInt(cell.dataset.rows),
+        col:parseInt(cell.dataset.cols)}
+    var currentPoint = new Object;
+    var newCellId;   
     var cellToCheck;
     var sawOpponenetCell = false;
     var commitCells;
     var cellsToUpdate = new Array();
     var tempCells = new Array();
+
     for(var i=0;i<8;i++)
-    {
+    {   
+         Object.assign(currentPoint,basePoint);
+        commitCells=false;
+
         for (var j =0; j<board.size ;j++)
         {
             getNextCellToCheck(i,currentPoint);
@@ -238,7 +302,7 @@ function checkClosingMove(cell){
             if(cellToCheck == null){
                 break;
             }
-
+            console.log("" + currentPoint.row + currentPoint.col + " "+i +" "+newCellId);
             if(isCellOccupied(cellToCheck))
             {
                 if(!sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) == null)
@@ -253,21 +317,29 @@ function checkClosingMove(cell){
                 else if(sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) != null){
                     commitCells=true;
                 }
+                if(commitCells === true){
+                    cellsToUpdate.push(...tempCells);
+                    break;
+                } 
             }
-            if(commitCells === true){
-                cellsToUpdate.push(...tempCells);
-            }      
+            else{
+                break;
+            }
+           
         }
         tempCells = new Array();
     }
-    return (cellsToUpdate.length !== 0 ? cellsToUpdate:null);
+    return (cellsToUpdate.length !== 0 ? cellsToUpdate: new Array());
 }
 
 function calculateIdFromRowsAndCols(point){
     var row = point.row;
     var col = point.col;
-
-    return (board.size*row)+col;
+    if(row >= board.size || row < 0 || col >= board.size || col < 0){
+        return null;
+    }
+    var result =(board.size*row)+ col;
+    return result;
 }
 
 function getNextCellToCheck(flag,lastCall){
@@ -302,7 +374,15 @@ function getNextCellToCheck(flag,lastCall){
     }
 }
 
-function switchPlayer(){
+function switchPlayerLight(){
+    if(currentPlayer.NO === 1){
+        currentPlayer = player2;
+    }
+    else {
+        currentPlayer = player1;
+    }
+}
+function switchPlayerFull(){
     currentPlayer.numberOfTurns++;
     if(currentPlayer.NO === 1){
         currentPlayer = player2;
