@@ -24,9 +24,10 @@ startGame();
 function startGame(){
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
+}  
+function endGame(){
+    console.log("endGame");
 }
-    
-
 
 function findPossibleMove()
 {
@@ -117,12 +118,11 @@ function Player(playerNumber) {
                 res++;
             }
         }
-        if(res < 10) // need 3
+        if(res < 3)
         {
             newRiskAmount++;
             this.riskAmount.innerHTML = newRiskAmount;         
         }
-        
     }
 
     this.setStartTurn = function() {
@@ -184,8 +184,24 @@ function handleClickCellEvent() {
         updatePlayerStats();
         switchPlayerFull();
         currentPossibleMoves = findPossibleMove();
+
+        checkEndGame();
     }
 }
+
+
+function checkEndGame()
+{
+    console.log(player1.score);
+    console.log(player2.score);
+
+    if(player1.score === 0 || player2.score === 0 || 
+        player1.score + player2.score === board.size*board.size){
+        endGame();
+        }
+}
+
+
 
 function updateScore(number){
     currentPlayer.addScore(number + 1);
@@ -213,7 +229,7 @@ function checkOpponentClosing(cellsToCheck){
             currentCell = document.getElementById(calculateIdFromRowsAndCols(currentPoint));
             if(isCellOccupied(currentCell)){
                 cellsToFlip = checkClosingMove(currentCell);
-                console.log(cellsToFlip +"check");
+                //console.log(cellsToFlip +"check");
                 if(cellsToFlip.length !== 0){
                     board.updateBoard(cellsToFlip);
                     updateScore(cellsToFlip.length);
@@ -300,7 +316,7 @@ function checkClosingMove(cell){
             if(cellToCheck == null){
                 break;
             }
-            console.log("" + currentPoint.row + currentPoint.col + " "+i +" "+newCellId);
+            //console.log("" + currentPoint.row + currentPoint.col + " "+i +" "+newCellId);
             if(isCellOccupied(cellToCheck))
             {
                 if(!sawOpponenetCell && cellToCheck.querySelector(".circlePlayer"+currentPlayer.NO) == null)
@@ -396,5 +412,5 @@ function switchPlayerFull(){
 function updatePlayerStats()
 {
     currentPlayer.getAvgTimeTurn();
-    currentPlayer.updateRiskAmout();
+    currentPlayer.updateRiskAmout;
 }
