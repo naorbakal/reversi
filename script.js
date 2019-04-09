@@ -82,19 +82,19 @@ function PossibleMove(cell){
 
 
 function Player(playerNumber) {
-    this.panel = document.querySelector(".playerPanel" + playerNumber);
-    console.log(this.panel);
-    this.score = 2;
-    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber)
-    var playerAverageStatsEl = document.querySelector(".player"+playerNumber+"AverageStats");
-    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
-    this.riskAmountElement = this.panel.querySelector(".playerRiskStats").querySelector(".statsContent");
-    console.log(this.riskAmountElement);
-    this.riskAmount = 0;
-    this.numberOfTurns = 0;
+
     this.NO = playerNumber;
+    this.panel = document.querySelector(".playerPanel" + this.NO);
+    this.scoreElement = document.querySelector("#scorePlayer" + playerNumber)
+    this.score = scoreElement.textContent;
+    var playerAverageStatsEl = document.querySelector(".player"+this.NO+"AverageStats");
+    this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
+    this.riskAmountElement = this.panel.querySelector(".playerRiskStats");
+    this.riskAmount = playerRiskElement.querySelector(".statsContent");
+    this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
+
     this.addScore = (numberToAdd)=>{
         this.score += numberToAdd;
         this.scoreElement.textContent = this.score;
@@ -103,13 +103,28 @@ function Player(playerNumber) {
     this.decreaseScore = (numberToDecrease)=>{
         this.score -= numberToDecrease;
         this.scoreElement.textContent = this.score;
-        if(this.score <= 2){
-            this.riskAmount++;
-            console.log("player num"+this.NO);
-            this.riskAmountElement.querySelector(".statsContent2").textContent = this.riskAmount;       
-        }
+        this.updateRiskAmount();
     }
     
+    this.updateRiskAmount = function() {
+        var newRiskAmount = this.riskAmount.innerHTML;
+        //console.log(newRiskAmount);
+        var res = 0;
+        var cell;
+        for(i=0; i<board.size*board.size; i++)
+        {
+            cell = document.getElementById(i);
+            if(cell.querySelector(".circlePlayer" + this.NO)!== null){
+                res++;
+            }
+        }
+        if(res < 10) // need 3
+        {
+            newRiskAmount++;
+            this.riskAmount.innerHTML = newRiskAmount;         
+        }
+        
+    }
 
     this.setStartTurn = function() {
         this.timeStart = new Date().getTime();
@@ -382,16 +397,6 @@ function switchPlayerFull(){
 
 function updatePlayerStats()
 {
-    updateAvgTurnTime();
-}
-
-function updateAvgTurnTime()
-{  
     currentPlayer.getAvgTimeTurn();
-    /*
-    var activePlayer = document.querySelector(".active");
-    var avg = activePlayer.querySelector(".player" + currentPlayer.NO + "AverageStats");
-    var content = avg.querySelector(".statsContent");
-    */
-
-}   
+    currentPlayer.updateRiskAmout();
+}
