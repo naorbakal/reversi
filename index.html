@@ -8,15 +8,53 @@
 
     <body>
         <div id="popup" class="overlay">
-                    <div class="popup">
-                        <h2>Here i am</h2>
-                        <a class="close" href="">&times;</a>
-                        <div class="content">
-                            Thank to pop me out of that button, but now i'm done so you can close this window.
+                    <div class="popup">    
+                        <h2>Reversi</h2>
+                        <div class="form__group">
+                                <input id="playerName1" class="form__field" placeholder="Player 1"><br>
+                                <label class="form__label">Player 1</label>
+                              </div>
+                              
+                              <div class="form__group">
+                                <input id="playerName2" class="form__field" placeholder="Player 2"><br>
+                                <label class="form__label">Player 2</label>
+                              </div>
+
+                              <div class="form__group">
+                                    <label class="container">6x6
+                                            <input type="radio" name="boardSize" checked="checked">
+                                            <span class="checkmark"></span>
+                                          </label>
+                                          
+                                          <label class="container">8x8
+                                            <input type="radio" name="boardSize" value="8">
+                                            <span class="checkmark"></span>
+                                          </label>
+                                          
+                                          <label class="container">10x10
+                                            <input type="radio" name="boardSize" value="10">
+                                            <span class="checkmark"></span>
+                                          </label>
+                                          
+                                          <label class="container">12x12
+                                            <input type="radio" name="boardSize" value="12">
+                                            <span class="checkmark"></span>
+                                          </label> 
+
+                                          <label class="container">14x14
+                                                <input type="radio" name="boardSize" value="14">
+                                                <span class="checkmark"></span>
+                                          </label> 
+
+                                          <button type="button"                          class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">Start Game</button>
+
+                                  
+                              </div>
+                              </form>
                         </div>
                 </div>
         </div>
-        <div class ="wrapper">
+        <div id ="game" class ="wrapper hidden">
                 <table id="mainBoard">
                         <!-- dynamic table here-->
                 </table>
@@ -50,6 +88,15 @@
                             <div class="statsContent">1</div>
                     </div>
                 </div>
+        </div>
+
+        <div id="popupEnd" class="overlay hidden">
+            <div class="popup">
+              <h2>Game Ended</h2>
+              <context>The Winner is Player 1</context>
+              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">Countine</button>
+              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">New Game</button>
+            </div>
         </div>
             
     </body>  
