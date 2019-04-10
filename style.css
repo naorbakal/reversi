@@ -9,7 +9,7 @@
     transition: opacity 500ms;
     visibility: visible;
     opacity: 1;
-    z-index: 1;
+    /*z-index: 1;*/
 }
 
 .overlay:target{
@@ -24,7 +24,6 @@
     border-radius: 5px;
     width: 30%;
     position: relative;
-    transition: all 0s ease-in-out;
 }
 
 .popup .close:hover {
@@ -247,6 +246,8 @@ label,
 }
   
 .expand {
+    margin-left: auto;
+    margin-right: auto;
     -webkit-transition: all 0.35s ease;
     -moz-transition: all 0.35s ease;
     -o-transition: all 0.35s ease;
@@ -302,6 +303,7 @@ label,
 
 .hidden {
     visibility: hidden;
+    opacity: 0;
 }
 
 .visible {

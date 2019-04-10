@@ -1,16 +1,3 @@
-
-/*
-var checkUpLeft = -101;
-var checkUp = -100;
-var checkUpRight = -99;
-var checkLeft = -1;
-var checkRight = 1;
-var checkDownLeft = 99;
-var checkDown = 100;
-var checkDownRight = 101;
-*/
-
-
 var currentPossibleMoves; 
 var player1;
 var player2; 
@@ -18,9 +5,9 @@ var board;
 var currentPlayer;
 
 function startGame(){
-    document.querySelector("#popupEnd").classList.remove("visible");
-    document.querySelector("#popupEnd").classList.add("hidden");
+    //document.querySelector("#popupEnd").classList.toggle("hidden");
     getGameDetails();
+    //document.queryCommandEnabled("#game").classList.toggle("hidden");
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
 }  
@@ -29,16 +16,17 @@ function getGameDetails()
 {
     var player1Name = document.querySelector("#playerName1");
     var player2Name = document.querySelector("#playerName2");
-    
-    if(player1Name === "")
-    {
+
+    console.log(player1Name.value === undefined);
+    console.log(typeof player1Name.value);
+
+    if(player1Name.value === ""){
         player1Name = "Player 1";
     }
     else{
         player1Name = player1Name.value;
     }
-    if(player2Name === "")
-    {
+    if(player2Name.value === ""){
         player2Name = "Player 2";
     }
     else{
@@ -47,22 +35,79 @@ function getGameDetails()
 
     var size = parseInt(document.querySelector('input[name="boardSize"]:checked').value);
     initGame(player1Name, player2Name, size);
+}
+
+function handleCountineClickButton(){
+    player1.totalTurnTime.concat(player1.turnTimeArray);
+    player2.totalTurnTime.concat(player2.turnTimeArray);
+    resetGame();
+    document.querySelector("#popupEnd").classList.toggle("hidden");
+    //document.querySelector("#game").classList.toggle("hidden");
+}
+
+function resetGame(){
+    deleteBoard();
+    board = new Board(board.size);
+    player1.scoreElement.innerHTML = 2;
+    player2.scoreElement.innerHTML = 2;
+
+    player1.score = 2;
+    player2.score = 2;
+
+    player1.averagePlayTime.innerHTML = "";
+    player2.averagePlayTime.innerHTML = "";
+
+    player1.turnTimeArray = [];
+    player2.turnTimeArray = [];
+
+    player1.riskAmount.innerHTML = 1;
+    player2.riskAmount.innerHTML = 1;
+
+    currentPlayer = player1;
+
+    currentPossibleMoves = findPossibleMove();
+    currentPlayer.setStartTurn();
+
+}
+
+function handleStartNewGameClickButton(){
+    deleteBoard();
+    document.querySelector("#popupEnd").classList.toggle("hidden");
+    document.querySelector("#popup").classList.toggle("hidden");
+    document.querySelector("#game").classList.toggle("hidden");
     
 }
+
+function deleteBoard(){
+    var table = document.querySelector("#mainBoard");
+    table.innerHTML = "";
+}
+
 
 function initGame(player1Name, player2Name, size) {
     player1 = new Player(1,player1Name);
     player2 = new Player(2,player2Name);
     board = new Board(size);
     document.querySelector("#popup").classList.toggle("hidden");
-    document.querySelector("#game").classList.toggle("visible");
+    document.querySelector("#game").classList.toggle("hidden");
     currentPlayer = player1;
 }
 
 function endGame(){
-    document.querySelector("#popupEnd").classList.toggle("visible");
-    document.querySelector("#game").classList.toggle("hidden");
+    var winPlayer = getWinner();
+    console.log(winPlayer);
+    var text = document.querySelector(".endGameContext");
+    text.innerHTML = "The Winner is " + winPlayer.name.innerHTML;
+    document.querySelector("#popupEnd").classList.toggle("hidden");
+}
 
+function getWinner(){
+    if(player1.score > player2.score){
+        return player1;
+    }
+    else{
+        return player2;
+    }
 }
 
 function findPossibleMove()
@@ -105,12 +150,12 @@ function PossibleMove(cell){
     var basePoint = {row:parseInt(cell.dataset.rows), col:parseInt(cell.dataset.cols)};
     var currentPoint = new Object();  
 
-    for (var i=0;  i<8; i++){
+    for (var i = 0;  i < 8; i++){
         Object.assign(currentPoint,basePoint);
         getNextCellToCheck(i,currentPoint);
         currentCellId = calculateIdFromRowsAndCols(currentPoint);
         currentCell = document.getElementById(currentCellId);
-        console.log(currentCellId + " " + i);
+        //console.log(currentCellId + " " + i);
         if(currentCell !== null){         
             if(isCellOccupied(currentCell)){                   
                 return true;
@@ -120,22 +165,24 @@ function PossibleMove(cell){
     return false;
 }
 
-
 function Player(playerNumber, playerName) {
     this.NO = playerNumber;
     this.name = document.querySelector(".player" + playerNumber + "Name");
     this.name.innerHTML = playerName;
     this.panel = document.querySelector(".playerPanel" + this.NO);
     this.scoreElement = document.querySelector("#scorePlayer" + playerNumber);
-    this.score = parseInt(this.scoreElement.textContent);
+    this.score = this.scoreElement.innerHTML = 2;
     var playerAverageStatsEl = document.querySelector(".player"+this.NO+"AverageStats");
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
+    this.averagePlayTime.innerHTML = "";
     this.riskAmountElement = this.panel.querySelector(".playerRiskStats");
     this.riskAmount =this.riskAmountElement.querySelector(".statsContent");
+    this.riskAmount.innerHTML = 1;
     this.trainerElement = this.panel.querySelector(".trainerWrapper");
     this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
+    this.totalTurnTime = new Array();
 
     this.addScore = (numberToAdd)=>{
         this.score += numberToAdd;
@@ -184,6 +231,17 @@ function Player(playerNumber, playerName) {
         }
         res = (sum / this.turnTimeArray.length).toFixed(2);
         this.averagePlayTime.innerHTML = res;
+
+        /* calculate total avg */
+        if(this.totalTurnTime.length !== 0){
+            var sum = 0;
+            var res;
+            for(var i = 0; i < this.totalTurnTime.length; i++) {
+                sum += this.totalTurnTime[i];
+            }
+            res = (sum / this.totalTurnTime.length).toFixed(2);
+            this.totalTurnTime.innerHTML = res;
+        }
     }
 
 }
@@ -195,7 +253,7 @@ function handleMouseOverCellEvent() {
     {
         (event.target).style.backgroundColor = "red";
     }
-    else{
+    else if(!isCellOccupied(document.getElementById(id))){
         potentialFlips = checkClosingMove(event.currentTarget);
         if(potentialFlips.length !== 0){
             currentPlayer.trainerElement.style.visibility ="visible";
@@ -242,7 +300,6 @@ function handleClickCellEvent() {
     }
 }
 
-
 function checkEndGame()
 {
     if(player1.score === 0 || player2.score === 0 || 
@@ -271,7 +328,7 @@ function checkOpponentClosing(cellsToCheck){
         var basePoint ={row: parseInt(currentCell.dataset.rows),
             col:parseInt(currentCell.dataset.cols)};
 
-        for(j=0;j<8;j++){
+        for(j = 0; j < 8; j++){
             Object.assign(currentPoint,basePoint);    
             getNextCellToCheck(i,currentPoint);
             currentCell = document.getElementById(calculateIdFromRowsAndCols(currentPoint));
@@ -294,7 +351,7 @@ function createMainBoard(size) {
     for(var i=0; i<size; i++){
         
        table += "</tr\n>"; 
-
+        
         for (var j=0; j<size; j++){
 
             table += "<td id="+ counterID +" data-rows="+i+" data-cols="+j+" onmouseover=handleMouseOverCellEvent() onmouseout=handleMouseOutCellEvent() onclick=handleClickCellEvent() class = gameSquare >" 
@@ -440,6 +497,7 @@ function switchPlayerLight(){
         currentPlayer = player1;
     }
 }
+
 function switchPlayerFull(){
     currentPlayer.numberOfTurns++;
     if(currentPlayer.NO === 1){
