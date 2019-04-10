@@ -16,7 +16,7 @@
                               </div>
                               
                               <div class="form__group">
-                                <input id="playerName2" class="form__field" placeholder="Player 2"><br>
+                                <input id="playerName2" class="form__field" placeholder="Player 2" ><br>
                                 <label class="form__label">Player 2</label>
                               </div>
 
@@ -55,10 +55,11 @@
                 </div>
         </div>
         <div id ="game" class ="wrapper hidden">
-                <table id="mainBoard">
-                        <!-- dynamic table here-->
-                </table>
-            
+                  <table id="mainBoard">
+
+                       <!-- dynamic table here --> 
+                </table> 
+              
                 <div class ="playerPanel1 active">
                     <div class = "playerName player1Name">  Player 1 </div>
                     <div class= "scoreBox">
@@ -94,10 +95,10 @@
 
         <div id="popupEnd" class="overlay hidden">
             <div class="popup">
-              <h2>Game Ended</h2>
-              <context>The Winner is Player 1</context>
-              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">Countine</button>
-              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">New Game</button>
+              <h1>Game Ended</h1>
+              <h2 class="endGameContext"></h2>
+              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="handleCountineClickButton()">Countine</button>
+              <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="handleStartNewGameClickButton()">New Game</button>
             </div>
         </div>
             
