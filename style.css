@@ -189,3 +189,19 @@
     visibility: visible;
 }
 
+.trainerWrapper{
+    height: 50;
+    width: 200px;
+    text-align: justify;
+    position: relative;
+    margin-top: 0%;
+    font-size: 20px;
+    visibility: hidden;
+}
+#trainerPlayer1{
+    margin-left:0%;
+}
+#trainerPlayer2{
+    margin-left:64%;
+}
+

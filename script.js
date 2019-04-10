@@ -94,6 +94,7 @@ function Player(playerNumber) {
     this.averagePlayTime = playerAverageStatsEl.querySelector(".statsContent");
     this.riskAmountElement = this.panel.querySelector(".playerRiskStats");
     this.riskAmount =this.riskAmountElement.querySelector(".statsContent");
+    this.trainerElement = this.panel.querySelector(".trainerWrapper");
     this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
@@ -151,9 +152,17 @@ function Player(playerNumber) {
 
 function handleMouseOverCellEvent() {
     var id = (event.currentTarget).getAttribute("id");
+    var potentialFlips;
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
     {
         (event.target).style.backgroundColor = "red";
+    }
+    else{
+        potentialFlips = checkClosingMove(event.currentTarget);
+        if(potentialFlips.length !== 0){
+            currentPlayer.trainerElement.style.visibility ="visible";
+            currentPlayer.trainerElement.textContent = potentialFlips.length + "gain to your score";
+        }       
     }
 }
 
@@ -162,6 +171,9 @@ function handleMouseOutCellEvent() {
     if(!currentPossibleMoves.includes(id) && !isCellOccupied(document.getElementById(id)))
     {
         (event.target).style.backgroundColor = "green";
+    }
+    else{
+        currentPlayer.trainerElement.style.visibility ="hidden";
     }
 
 }
@@ -173,6 +185,7 @@ function handleClickCellEvent() {
 
     if(currentPossibleMoves.includes(id))
     {
+        currentPlayer.trainerElement.style.visibility ="hidden";
         currentPlayer.setEndTurn();
         p.classList.add("circlePlayer" + currentPlayer.NO);
         currentPlayer.numberOfTurns++;
@@ -180,7 +193,6 @@ function handleClickCellEvent() {
         
         if(cellsToFlip.length !== 0){
             board.updateBoard(cellsToFlip);  
-            //console.log(cellsToFlip);
            // checkOpponentClosing(cellsToFlip);
         }
         updateScore(cellsToFlip.length);
