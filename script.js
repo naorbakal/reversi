@@ -46,7 +46,7 @@ function findPossibleMove()
         }
     }
     return PossibleMovesIDs;
-    
+
 }
 
 function isCellOccupied(cell){
@@ -66,12 +66,15 @@ function isCellOccupied(cell){
 
 function PossibleMove(cell){
     var currentCell;
-    var cellID = parseInt(cell.getAttribute("id"));
-    var checksArray = [-(board.size+1),-(board.size),-(board.size-1),-1,1,(board.size+1),(board.size),(board.size-1)];
+    var basePoint = {row:parseInt(cell.dataset.rows), col:parseInt(cell.dataset.cols)};
+    var currentPoint = new Object();  
 
-    for (var i=0;  i<checksArray.length; i++){
-        //console.log(cellID + parseInt(item));
-        currentCell = document.getElementById(cellID + checksArray[i]);
+    for (var i=0;  i<8; i++){
+        Object.assign(currentPoint,basePoint);
+        getNextCellToCheck(i,currentPoint);
+        currentCellId = calculateIdFromRowsAndCols(currentPoint);
+        currentCell = document.getElementById(currentCellId);
+        console.log(currentCellId + " " + i);
         if(currentCell !== null){         
             if(isCellOccupied(currentCell)){                   
                 return true;
@@ -192,9 +195,6 @@ function handleClickCellEvent() {
 
 function checkEndGame()
 {
-    console.log(player1.score);
-    console.log(player2.score);
-
     if(player1.score === 0 || player2.score === 0 || 
         player1.score + player2.score === board.size*board.size){
         endGame();
@@ -338,8 +338,7 @@ function checkClosingMove(cell){
             }
             else{
                 break;
-            }
-           
+            }         
         }
         tempCells = new Array();
     }
