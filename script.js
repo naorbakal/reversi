@@ -12,21 +12,57 @@ var checkDownRight = 101;
 
 
 var currentPossibleMoves; 
-var player1 = new Player(1);
-var player2 = new Player(2);
-var boardSize = 8;
-var board = new Board(boardSize);
-var currentPlayer = player1;
-
-
-startGame();
+var player1;
+var player2; 
+var board;
+var currentPlayer;
 
 function startGame(){
+    document.querySelector("#popupEnd").classList.remove("visible");
+    document.querySelector("#popupEnd").classList.add("hidden");
+    getGameDetails();
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
 }  
+
+function getGameDetails()
+{
+    var player1Name = document.querySelector("#playerName1");
+    var player2Name = document.querySelector("#playerName2");
+    
+    if(player1Name === "")
+    {
+        player1Name = "Player 1";
+    }
+    else{
+        player1Name = player1Name.value;
+    }
+    if(player2Name === "")
+    {
+        player2Name = "Player 2";
+    }
+    else{
+        player2Name = player2Name.value;
+    }
+
+    var size = parseInt(document.querySelector('input[name="boardSize"]:checked').value);
+    initGame(player1Name, player2Name, size);
+    
+}
+
+function initGame(player1Name, player2Name, size) {
+    player1 = new Player(1,player1Name);
+    player2 = new Player(2,player2Name);
+    board = new Board(size);
+    document.querySelector("#popup").classList.toggle("hidden");
+    document.querySelector("#game").classList.toggle("visible");
+    currentPlayer = player1;
+}
+
 function endGame(){
-    console.log("endGame");
+    document.querySelector("#popupEnd").classList.toggle("visible");
+    document.querySelector("#game").classList.toggle("hidden");
+
 }
 
 function findPossibleMove()
@@ -85,8 +121,10 @@ function PossibleMove(cell){
 }
 
 
-function Player(playerNumber) {
+function Player(playerNumber, playerName) {
     this.NO = playerNumber;
+    this.name = document.querySelector(".player" + playerNumber + "Name");
+    this.name.innerHTML = playerName;
     this.panel = document.querySelector(".playerPanel" + this.NO);
     this.scoreElement = document.querySelector("#scorePlayer" + playerNumber);
     this.score = parseInt(this.scoreElement.textContent);
@@ -122,7 +160,7 @@ function Player(playerNumber) {
                 res++;
             }
         }
-        if(res < 3)
+        if(res === 2)
         {
             newRiskAmount++;
             this.riskAmount.innerHTML = newRiskAmount;         
@@ -213,8 +251,6 @@ function checkEndGame()
         }
 }
 
-
-
 function updateScore(number){
     currentPlayer.addScore(number + 1);
     switchPlayerLight();
@@ -283,7 +319,6 @@ function createMainBoard(size) {
     document.querySelector("#mainBoard").innerHTML = table;
 }
 
-
 function Board(size){
     
     createMainBoard(size);
@@ -298,9 +333,7 @@ function Board(size){
            currentTool.classList.toggle("circlePlayer1");
            currentTool.classList.toggle("circlePlayer2");
         }
-    }
-    
-       
+    }      
 }
 
 function checkClosingMove(cell){
@@ -315,7 +348,7 @@ function checkClosingMove(cell){
     var cellsToUpdate = new Array();
     var tempCells = new Array();
 
-    for(var i=0;i<8;i++)
+    for(var i = 0 ;i < 8 ;i++)
     {   
          Object.assign(currentPoint,basePoint);
         commitCells=false;
