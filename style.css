@@ -269,13 +269,24 @@ label,
     position: absolute;
     left: 50%;     
     width:350px;
-    height:300px;
+    height:100%;
     transform: translate(-50%, -50%);
     background: #fff;
 }
 .clear {
     clear: both;
 }
+
+.totalTurns{
+    margin-left:auto;
+    margin-right: auto; 
+    text-align: center;
+    font-size: 25px;
+    position: relative;
+    width: 50%;
+    bottom: 50px; 
+}
+
 .wrapper {
     width: 1000px;
     height: 500px;
@@ -302,23 +313,30 @@ label,
     background: rgb(192, 187, 187);
 }
 
-.playerPanel1,
+.playerPanel1{
+    width:33%;
+    float: right;
+    height: 600px;
+}
 .playerPanel2{
-    width: 50%;
+    width: 33%;
     float: left;
     height: 600px;
 }
 
 .playerName{
     font-size: 40px;
-    margin-top:10%;
+    margin-top:10px;
+    margin-left:auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    text-align: center;
+    position: relative;
    
 }
 .player1Name{
-    margin-left: 20%;
 }
 .player2Name{
-    margin-left: 55%;
 }
 
 .gameSquare{
@@ -330,46 +348,53 @@ label,
 }
 
 .scoreBox{  
-    margin-top: 10%;
-    margin-left: 30%; 
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-left: auto;
     width: 100px;
     height: 100px;
-    color: rgb(21, 24, 27);
+    color:rgb(216, 233, 238);
+    border:6px solid rgb(0, 0, 0);
+    background-color:  rgb(199, 18, 18);
     text-align: center;
     font-size:30px;
 }
 
 #scorePlayer1{
-    margin-left:-80%;
+    margin:auto; 
+    padding: 35px 36px 36px 35px;   
 }
 
 #scorePlayer2{
-    margin-left:180%;
+    margin:auto;
+    padding: 35px 35px 35px 35px;   
 }
 
 .statsWrapper{
     width: 100px;
     height:80px; 
     border:2px;
-    background-color: rgb(65, 109, 35);
+    background-color: rgb(199, 18, 18);;
     text-align: center;
     color: rgb(7, 7, 7);
+    border:6px solid rgb(0, 0, 0);
     float: left;     
 }
 
 .player1AverageStats{
-    margin-top: 10%;    
-    margin-left: 0%;
+    margin-top: 40%;  
+    margin-left: 5%;   
 }
 
 .player2AverageStats{
-    margin-top: 10%;
-    margin-left: 40%; 
+    margin-top: 40%;
+    margin-left: 5%; 
 }
 
 .playerRiskStats{
-    margin-top: 10%;    
-    margin-left:20%; 
+    margin-top: 40%;    
+    margin-left:23%; 
 }
 .statsLabel{
     margin-left: 5%;
