@@ -6,6 +6,7 @@ var currentPlayer;
 
 function startGame(){
     getGameDetails();
+    startStopWatch();
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
 }  
@@ -60,6 +61,7 @@ function resetGame(){
     currentPlayer = player1;
 
     currentPossibleMoves = findPossibleMove();
+    startStopWatch();
     currentPlayer.setStartTurn();
 
 }
@@ -108,10 +110,12 @@ function initGame(player1Name, player2Name, size) {
 }
 
 function endGame(){
+    stopTime();
     var winPlayer = getWinner();
     var text = document.querySelector(".endGameContext");
     text.innerHTML = "The Winner is " + winPlayer.name.innerHTML;
     document.querySelector("#popupEnd").classList.toggle("hidden");
+    resetTime();
 }
 
 function getWinner(){
@@ -529,4 +533,101 @@ function updatePlayerStats()
 {
     currentPlayer.getAvgTimeTurn();
     currentPlayer.updateRiskAmout;
+}
+
+
+  
+var interval;
+var minutes = 0;
+var seconds = 0; 
+var tens = 0; 
+var userTime;
+var time = false;
+var userMinutes, userSeconds, userTens;	
+
+function validateStopWatch() {
+	var userInput = document.getElementById("userTime").value;
+	var regex = /^[0-5][0-9]:[0-5][0-9]:[0-9][0-9]$/;
+	
+	if (regex.test(userInput)) { //true - validates
+		document.getElementById("userInputPrompt").innerHTML = "<p>Good input</p>";
+		startStopWatch();
+	}else{ // false - not valid
+		document.getElementById("userInputPrompt").innerHTML = "<p>Format must be 00:00:00 <br />Minutes must be 00-59. Seconds must be 00-59. Tenths must be 00-99.</p>";
+		if (userInput === false || userInput === null) {
+				stopTime();
+			}
+	}
+}
+
+var interval;
+var minutes = 0;
+var seconds = 0; 
+var tens = 0; 
+var userTime;
+var userMinutes, userSeconds, userTens;	
+
+
+
+function startStopWatch() {
+	document.getElementById("minutes").innerHTML = "0" + 0;
+	minutes = 0;
+	document.getElementById("seconds").innerHTML = "0" + 0;
+	seconds = 0;
+	document.getElementById("tens").innerHTML = "0" + 0;
+	tens = 0;
+	startTime();
+}
+
+function startTime() {
+	interval = setInterval(timerStopWatch, 10);
+}
+
+function timerStopWatch () {	
+    tens++;   
+    if(tens < 9) {
+      document.getElementById("tens").innerHTML = "0" + tens;
+    }
+    if (tens > 9) {
+      document.getElementById("tens").innerHTML = tens;   
+    } 
+    if (tens > 99) {
+      seconds++;
+      document.getElementById("seconds").innerHTML = "0" + seconds;
+      tens = 0;
+      document.getElementById("tens").innerHTML = "0" + 0;
+    }
+    if (seconds > 9) {
+      document.getElementById("seconds").innerHTML = seconds;
+    }
+	  if (seconds>=60) {
+		minutes++;
+		document.getElementById("minutes").innerHTML = "0" + minutes;
+		seconds = 0;
+		document.getElementById("seconds").innerHTML = "0" + 0;
+	  }
+	  if (minutes > 9) {
+      document.getElementById("minutes").innerHTML = minutes;
+    }
+	  if(minutes >=60) {
+		clearInterval(interval);
+      }
+      
+	  if(tens == userTens && seconds == userSeconds && minutes == userMinutes) {
+		stopTime();
+	  }
+  }
+	
+function stopTime() { 
+	clearInterval(interval);
+}
+
+function resetTime() {
+	stopTime();
+	document.getElementById("minutes").innerHTML = "0" + 0;
+	minutes = 0;
+	document.getElementById("seconds").innerHTML = "0" + 0;
+	seconds = 0;
+	document.getElementById("tens").innerHTML = "0" + 0;
+    tens = 0;
 }
