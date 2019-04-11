@@ -11,10 +11,17 @@ function startGame(){
     startStopWatch();
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
-}  
+}
 
 function getGameDetails()
 {
+    document.getElementById("totalTurns").innerHTML = totalGameTurns;
+    document.getElementById("stopperLabel").classList.toggle("hidden");
+    document.getElementById("totalTurnsLabel").classList.toggle("hidden");
+    document.getElementById("stopwatch").classList.toggle("hidden");
+    document.getElementById("totalTurns").classList.toggle("hidden");
+    document.getElementById("quitButton").classList.toggle("hidden");
+
     var player1Name = document.querySelector("#playerName1");
     var player2Name = document.querySelector("#playerName2");
 
@@ -36,10 +43,14 @@ function getGameDetails()
 }
 
 function handleCountineClickButton(){
-    player1.totalTurnTime.concat(player1.turnTimeArray);
-    player2.totalTurnTime.concat(player2.turnTimeArray);
+    player1.totalTurnTime = player1.totalTurnTime.concat(player1.turnTimeArray);
+    player2.totalTurnTime = player2.totalTurnTime.concat(player2.turnTimeArray);
     resetGame();
     document.querySelector("#popupEnd").classList.toggle("hidden");
+}
+
+function handleQuitClickButton(){
+    endGame(true);
 }
 
 function resetGame(){
@@ -63,18 +74,25 @@ function resetGame(){
 
     currentPlayer = player1;
 
+    var totalTurns = document.getElementById("totalTurns");
+    totalTurns.innerHTML = totalGameTurns;
+
     currentPossibleMoves = findPossibleMove();
     startStopWatch();
     currentPlayer.setStartTurn();
-
 }
 
 function handleStartNewGameClickButton(){
     deleteBoard();
+    document.getElementById("totalTurns").innerHTML = totalGameTurns;
     document.querySelector("#popupEnd").classList.toggle("hidden");
     document.querySelector("#popup").classList.toggle("hidden");
     document.querySelector("#game").classList.toggle("hidden");
-    
+    document.getElementById("stopperLabel").classList.toggle("hidden");
+    document.getElementById("totalTurnsLabel").classList.toggle("hidden");
+    document.getElementById("stopwatch").classList.toggle("hidden");
+    document.getElementById("totalTurns").classList.toggle("hidden");
+    document.getElementById("quitButton").classList.toggle("hidden");
 }
 
 function deleteBoard(){
@@ -106,22 +124,31 @@ function initGame(player1Name, player2Name, size) {
        else {
             player2.trainerMode=false;     
         }
-
     });
     
     currentPlayer = player1;
 }
 
-function endGame(){
+function endGame(isQuit){
     stopTime();
-    var winPlayer = getWinner();
+    var winPlayer = getWinner(isQuit);
     var text = document.querySelector(".endGameContext");
     text.innerHTML = "The Winner is " + winPlayer.name.innerHTML;
     document.querySelector("#popupEnd").classList.toggle("hidden");
     resetTime();
 }
 
-function getWinner(){
+function getWinner(isQuit){
+
+    if(isQuit){
+       if(currentPlayer === player1){
+           return player2;
+       }
+       else{
+            return player1;
+       }
+       
+    }
     if(player1.score > player2.score){
         return player1;
     }
@@ -202,6 +229,8 @@ function Player(playerNumber, playerName) {
     this.numberOfTurns = 0;
     this.turnTimeArray = new Array();
     this.timeStart;
+    var element = this.panel.querySelector(".totalAverageTime");
+    this.totalAvgTime = element.querySelector(".statsContent");
     this.totalTurnTime = new Array();
     this.trainerMode = false;
 
@@ -254,6 +283,7 @@ function Player(playerNumber, playerName) {
         this.averagePlayTime.innerHTML = res;
 
         /* calculate total avg */
+
         if(this.totalTurnTime.length !== 0){
             var sum = 0;
             var res;
@@ -261,7 +291,7 @@ function Player(playerNumber, playerName) {
                 sum += this.totalTurnTime[i];
             }
             res = (sum / this.totalTurnTime.length).toFixed(2);
-            this.totalTurnTime.innerHTML = res;
+            this.totalAvgTime.innerHTML = res;
         }
     }
 
@@ -278,7 +308,7 @@ function handleMouseOverCellEvent() {
         potentialFlips = checkClosingMove(event.currentTarget);
         if(potentialFlips.length !== 0){
             currentPlayer.trainerElement.style.visibility ="visible";
-            currentPlayer.trainerElement.textContent = (potentialFlips.length + 1) + " Points will be added";
+            currentPlayer.trainerElement.textContent = (potentialFlips.length) + " Points will be added";
         }       
     }
 }
@@ -307,11 +337,11 @@ function handleClickCellEvent() {
         p.classList.add("circlePlayer" + currentPlayer.NO);
         currentPlayer.numberOfTurns++;
         totalGameTurns++;
+        document.getElementById("totalTurns").innerHTML = totalGameTurns;
         cellsToFlip = checkClosingMove(event.currentTarget);
         
         if(cellsToFlip.length !== 0){
             board.updateBoard(cellsToFlip);  
-           // checkOpponentClosing(cellsToFlip);
         }
         updateScore(cellsToFlip.length);
         updatePlayerStats();
@@ -326,7 +356,7 @@ function checkEndGame()
 {
     if(player1.score === 0 || player2.score === 0 || 
         player1.score + player2.score === board.size*board.size){
-        endGame();
+        endGame(false);
         }
 }
 

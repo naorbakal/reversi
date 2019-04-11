@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="style.css">
         <title>Reversi Game</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
     </head>
 
     <body>
@@ -54,12 +55,13 @@
                         </div>
                 </div>
         <div class="fullWrapper">
-          <div class ="stopperLabel">Time Passed</div>
-          <div class ="totalTurnsLabel">Total Turns</div>
-            <div id ="stopwatch">
+          <div id="stopperLabel" class= "hidden">Time Passed</div>
+          <div id ="totalTurnsLabel" class="hidden">Total Turns</div>
+            <div id ="stopwatch" class = "hidden">
                 <p id = "timer"><span id="minutes">00</span>:<span id="seconds">00</span>:<span id="tens">00</span></p>                
             </div>
-            <div id="totalTurns">0</div>
+            <div id="totalTurns" class = "hidden">0</div>
+            <button type="button" id="quitButton" class="fancy-button medium half-left-rounded pomegranate expand hidden" onclick="handleQuitClickButton()">Quit</button> 
             <div id ="game" class ="wrapper hidden">
                   <table id="mainBoard">
 
@@ -77,9 +79,13 @@
                         <div class="statsContent"></div>
                     </div> 
                     <div class="statsWrapper playerRiskStats">
-                            <div class="statsLabel">Risk</div>
+                            <div class="statsLabel">Two Pawns</div>
                             <div class="statsContent">1</div>
-                    </div>                 
+                    </div> 
+                    <div class="statsWrapper totalAverageTime">
+                      <div class = statsLabel>Total Average Play Time</div>
+                      <div class = statsContent></div>
+                    </div>                
                 </div>  
                 <div class ="playerPanel2">
                     <input type="checkbox" name="checkBox" class="trainerCheckBox">Trainer Mode
@@ -90,24 +96,19 @@
                     <div class = "trainerWrapper">trainer</div>
                     <div class="player2AverageStats statsWrapper">
                         <div class="statsLabel">Average Play</div>
-                        <div class="statsContent"> </div>
+                        <div class="statsContent"></div>
                     </div>
                     <div class="statsWrapper playerRiskStats">
 
-                            <div class="statsLabel">Risk</div>
+                            <div class="statsLabel">Two Pawns</div>
                             <div class="statsContent">1</div>
                     </div>
+                    <div class="statsWrapper totalAverageTime">
+                        <div class = statsLabel>Total Average Play Time</div>
+                        <div class = statsContent></div>
+                      </div> 
                 </div>
                 <div class = "trainerWrapper" id="trainerPlayer2">trainer</div>
-                <div class="player2AverageStats statsWrapper">
-                    <div class="statsLabel">Average Play</div>
-                    <div class="statsContent"> </div>
-                </div>
-                <div class="statsWrapper playerRiskStats">
-
-                        <div class="statsLabel">Risk</div>
-                        <div class="statsContent">1</div>
-                 </div>
               </div>
             </div> 
         <div id="popupEnd" class="overlay hidden">
