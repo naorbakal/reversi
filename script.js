@@ -76,7 +76,7 @@ function resetGame(){
 
     var totalTurns = document.getElementById("totalTurns");
     totalTurns.innerHTML = totalGameTurns;
-
+    currentPlayer = player1;
     currentPossibleMoves = findPossibleMove();
     startStopWatch();
     currentPlayer.setStartTurn();
