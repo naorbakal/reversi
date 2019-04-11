@@ -4,6 +4,7 @@ var player2;
 var board;
 var currentPlayer;
 var totalGameTurns;
+var firstPlay = true;
 
 function startGame(){
     totalGameTurns = 0;
@@ -72,11 +73,14 @@ function resetGame(){
     player1.riskAmount.innerHTML = 1;
     player2.riskAmount.innerHTML = 1;
 
-    currentPlayer = player1;
+    if(currentPlayer !== player1)
+    {
+        switchPlayerFull();
+    }
 
     var totalTurns = document.getElementById("totalTurns");
     totalTurns.innerHTML = totalGameTurns;
-    currentPlayer = player1;
+    firstPlay = true;
     currentPossibleMoves = findPossibleMove();
     startStopWatch();
     currentPlayer.setStartTurn();
@@ -105,6 +109,7 @@ function initGame(player1Name, player2Name, size) {
     player1 = new Player(1,player1Name);
     player2 = new Player(2,player2Name);
     board = new Board(size);
+    firstPlay = true;
     document.querySelector("#popup").classList.toggle("hidden");
     document.querySelector("#game").classList.toggle("hidden");
     document.querySelector(".playerPanel1").querySelector(".trainerCheckBox").addEventListener("change", function(){
@@ -114,7 +119,6 @@ function initGame(player1Name, player2Name, size) {
        else {
             player1.trainerMode=false;     
         }
-
     });
 
     document.querySelector(".playerPanel2").querySelector(".trainerCheckBox").addEventListener("change", function(){
@@ -247,7 +251,6 @@ function Player(playerNumber, playerName) {
     
     this.updateRiskAmount = function() {
         var newRiskAmount = this.riskAmount.innerHTML;
-        //console.log(newRiskAmount);
         var res = 0;
         var cell;
         for(i=0; i<board.size*board.size; i++)
@@ -257,7 +260,7 @@ function Player(playerNumber, playerName) {
                 res++;
             }
         }
-        if(res === 2)
+        if((res === 2) && (firstPlay === false))
         {
             newRiskAmount++;
             this.riskAmount.innerHTML = newRiskAmount;         
@@ -271,6 +274,9 @@ function Player(playerNumber, playerName) {
     this.setEndTurn = function() {
         var turnTimeSec = (new Date().getTime() - this.timeStart) / 1000;
         this.turnTimeArray.push(turnTimeSec);
+        if(this.totalTurnTime.length !== 0){
+            this.totalTurnTime.push(turnTimeSec); 
+        }
     }
 
     this.getAvgTimeTurn = function() {
@@ -285,6 +291,8 @@ function Player(playerNumber, playerName) {
         /* calculate total avg */
 
         if(this.totalTurnTime.length !== 0){
+
+            console.log("check");
             var sum = 0;
             var res;
             for(var i = 0; i < this.totalTurnTime.length; i++) {
@@ -347,7 +355,7 @@ function handleClickCellEvent() {
         updatePlayerStats();
         switchPlayerFull();
         currentPossibleMoves = findPossibleMove();
-
+        firstPlay = false;
         checkEndGame();
     }
 }
@@ -566,7 +574,7 @@ function switchPlayerFull(){
 function updatePlayerStats()
 {
     currentPlayer.getAvgTimeTurn();
-    currentPlayer.updateRiskAmout;
+    currentPlayer.updateRiskAmount();
 }
 
 
