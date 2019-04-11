@@ -84,6 +84,26 @@ function initGame(player1Name, player2Name, size) {
     board = new Board(size);
     document.querySelector("#popup").classList.toggle("hidden");
     document.querySelector("#game").classList.toggle("hidden");
+    document.querySelector(".playerPanel1").querySelector(".trainerCheckBox").addEventListener("change", function(){
+        if(this.checked) {
+            player1.trainerMode = true;
+       } 
+       else {
+            player1.trainerMode=false;     
+        }
+
+    });
+
+    document.querySelector(".playerPanel2").querySelector(".trainerCheckBox").addEventListener("change", function(){
+        if(this.checked) {
+            player2.trainerMode = true;
+       } 
+       else {
+            player2.trainerMode=false;     
+        }
+
+    });
+    
     currentPlayer = player1;
 }
 
@@ -176,6 +196,7 @@ function Player(playerNumber, playerName) {
     this.turnTimeArray = new Array();
     this.timeStart;
     this.totalTurnTime = new Array();
+    this.trainerMode = false;
 
     this.addScore = (numberToAdd)=>{
         this.score += numberToAdd;
@@ -246,11 +267,11 @@ function handleMouseOverCellEvent() {
     {
         (event.target).style.backgroundColor = "red";
     }
-    else if(!isCellOccupied(document.getElementById(id))){
+    else if(!isCellOccupied(document.getElementById(id))&& currentPlayer.trainerMode === true){
         potentialFlips = checkClosingMove(event.currentTarget);
         if(potentialFlips.length !== 0){
             currentPlayer.trainerElement.style.visibility ="visible";
-            currentPlayer.trainerElement.textContent = potentialFlips.length + "gain to your score";
+            currentPlayer.trainerElement.textContent = (potentialFlips.length + 1) + " Points will be added";
         }       
     }
 }
