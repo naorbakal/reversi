@@ -290,14 +290,19 @@ label,
 .wrapper {
     width: 1000px;
     height: 500px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: relative;
     transform: translate(-50%, -50%);
+    top:42%;
     background-color: #fff;
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     background:white;
+}
+
+.fullWrapper{
+    width: 50%;
+    height: 650px;
+    margin-left: 50%;
 }
 
 .hidden {
@@ -448,11 +453,6 @@ label,
     font-size: 20px;
     visibility: hidden;
 }
-#trainerPlayer1{
-}
-#trainerPlayer2{
-    margin-left:64%;
-}
 .trainerCheckBox{
     transform: scale(1.5);
     margin-left: 3%;
@@ -461,6 +461,22 @@ label,
 .trainerLabel{
     font-size: 15px;
     left: 10%;
+    position: relative;
+}
+
+#stopwatch {
+    position: relative;
+    top: 10%;
+    left: 17%;
+    margin-top: -50px;
+    margin-left: -100px;
+	text-align:center;
+    transform: translate(-50%, -50%);
+}
+#timer {
+	font-family: Tahoma, Geneva, sans-serif;
+    font-size: 30px;
+	color:#000;
     position: relative;
 }
 

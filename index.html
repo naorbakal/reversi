@@ -7,7 +7,6 @@
     </head>
 
     <body>
-        <time id="timer">0:00:00.00</time>
         <div id="popup" class="overlay">
                     <div class="popup">    
                         <h2>Reversi</h2>
@@ -47,21 +46,23 @@
                                                 <span class="checkmark"></span>
                                           </label> 
 
-                                          <button type="button"                          class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">Start Game</button>
+                                          <button type="button" class="fancy-button medium half-left-rounded pomegranate expand" onclick="startGame()">Start Game</button>
 
                                   
                               </div>
                               </form>
                         </div>
                 </div>
-        </div>
-
-        <div id ="game" class ="wrapper hidden">
+        <div class="fullWrapper">
+            <div id ="stopwatch">
+                <p id = "timer"><span id="minutes">00</span>:<span id="seconds">00</span>:<span id="tens">00</span></p>
+                
+            </div>
+            <div id ="game" class ="wrapper hidden">
                   <table id="mainBoard">
 
                        <!-- dynamic table here --> 
                 </table> 
-              
                 <div class ="playerPanel1 active">
                     <input type="checkbox" name="checkBox" class="trainerCheckBox">Trainer Mode
                     <div class = "playerName player1Name">  Player 1 </div>
@@ -106,10 +107,7 @@
                         <div class="statsContent">1</div>
                  </div>
               </div>
-           </div>
-        </div> 
-      
-
+            </div> 
         <div id="popupEnd" class="overlay hidden">
             <div class="popup">
               <h1>Game Ended</h1>
