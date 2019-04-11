@@ -3,8 +3,10 @@ var player1;
 var player2; 
 var board;
 var currentPlayer;
+var totalGameTurns;
 
 function startGame(){
+    totalGameTurns = 0;
     getGameDetails();
     startStopWatch();
     currentPossibleMoves = findPossibleMove();
@@ -42,6 +44,7 @@ function handleCountineClickButton(){
 
 function resetGame(){
     deleteBoard();
+    totalGameTurns = 0;
     board = new Board(board.size);
     player1.scoreElement.innerHTML = 2;
     player2.scoreElement.innerHTML = 2;
@@ -303,6 +306,7 @@ function handleClickCellEvent() {
         currentPlayer.setEndTurn();
         p.classList.add("circlePlayer" + currentPlayer.NO);
         currentPlayer.numberOfTurns++;
+        totalGameTurns++;
         cellsToFlip = checkClosingMove(event.currentTarget);
         
         if(cellsToFlip.length !== 0){
