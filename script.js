@@ -5,9 +5,7 @@ var board;
 var currentPlayer;
 
 function startGame(){
-    //document.querySelector("#popupEnd").classList.toggle("hidden");
     getGameDetails();
-    //document.queryCommandEnabled("#game").classList.toggle("hidden");
     currentPossibleMoves = findPossibleMove();
     currentPlayer.setStartTurn();
 }  
@@ -16,9 +14,6 @@ function getGameDetails()
 {
     var player1Name = document.querySelector("#playerName1");
     var player2Name = document.querySelector("#playerName2");
-
-    console.log(player1Name.value === undefined);
-    console.log(typeof player1Name.value);
 
     if(player1Name.value === ""){
         player1Name = "Player 1";
@@ -42,7 +37,6 @@ function handleCountineClickButton(){
     player2.totalTurnTime.concat(player2.turnTimeArray);
     resetGame();
     document.querySelector("#popupEnd").classList.toggle("hidden");
-    //document.querySelector("#game").classList.toggle("hidden");
 }
 
 function resetGame(){
@@ -95,7 +89,6 @@ function initGame(player1Name, player2Name, size) {
 
 function endGame(){
     var winPlayer = getWinner();
-    console.log(winPlayer);
     var text = document.querySelector(".endGameContext");
     text.innerHTML = "The Winner is " + winPlayer.name.innerHTML;
     document.querySelector("#popupEnd").classList.toggle("hidden");
