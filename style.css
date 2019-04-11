@@ -288,6 +288,7 @@ label,
 }
 
 .wrapper {
+    top:10%;
     width: 1000px;
     height: 500px;
     position: relative;
@@ -339,10 +340,6 @@ label,
     text-align: center;
     position: relative;
    
-}
-.player1Name{
-}
-.player2Name{
 }
 
 .gameSquare{
@@ -467,11 +464,11 @@ label,
 #stopwatch {
     position: relative;
     top: 10%;
-    left: 17%;
-    margin-top: -50px;
-    margin-left: -100px;
+    margin-top: -10px;
+    margin-left: -115px;
 	text-align:center;
     transform: translate(-50%, -50%);
+    float: left;
 }
 #timer {
 	font-family: Tahoma, Geneva, sans-serif;
@@ -479,4 +476,42 @@ label,
 	color:#000;
     position: relative;
 }
+
+#totalTurns{
+    position: relative;
+    top: 10%;
+    margin-top: -10px;
+    margin-left: 150px;
+	text-align:center;
+    transform: translate(-50%, -50%);
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 30px;
+    float: left;
+}
+.stopperLabel{
+    position: relative;
+    width:40%;
+    top:10%;
+    margin-top: -10px;
+    margin-left: -115px;
+    transform: translate(-50%, -50%);
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 30px;
+    text-align:center;
+
+}
+.totalTurnsLabel{
+    position: relative;
+    top: 6%;
+    margin-top: -10px;
+    margin-left: 150px;
+	text-align:center;
+    transform: translate(-50%, -50%);
+    width:40%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 30px;
+    
+}
+
+
 
